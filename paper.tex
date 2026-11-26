@@ -1,0 +1,190 @@
+\documentclass[10pt]{article}
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb,amsthm}
+\DeclareFontShape{OMX}{cmex}{m}{n}{<->cmex10}{}
+\DeclareMathSizes{10}{10}{7}{7}
+\DeclareMathSizes{9}{10}{7}{7}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\title{A smallest fractional separation for spectral Chv\'atal}
+\author{}
+\date{November 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a downset on at most six elements, the Lov\'asz theta number of its
+disjointness graph equals the size of its largest star. All these downsets
+admit a clique partition of that size except one, up to relabeling. The
+exception is the face family of the six-vertex triangulation of the real
+projective plane. Its largest star has size $11$, its fractional independence
+number is $35/3$, and its minimum clique partition has size $12$. The theta
+equality also holds for every rank-three extension of this family by one element.
+\end{abstract}
+
+Let $G(\mathcal D)$ be the simple graph on the nonempty members of a finite
+downset $\mathcal D$, with adjacency given by disjointness. Write $s(\mathcal D)$
+for the largest number of sets through one element, with $s=\vartheta=0$
+for empty support. Ellis, Filmus, and
+Friedgut's Conjecture H is equivalent to $\vartheta(G(\mathcal D))=s(\mathcal D)$
+\cite{eff}. They give a seven-element counterexample to the stronger
+fractional independence bound.
+
+\begin{theorem}
+If $\mathcal D$ has support of size at most six, then
+$\vartheta(G(\mathcal D))=s(\mathcal D)$. A clique partition of size
+$s(\mathcal D)$ exists except when $\mathcal D$ is the closure of the ten
+triples in \eqref{eq:facets}, up to relabeling. This exception has
+$s(\mathcal D)=11$, fractional independence $35/3$, and clique partition
+number $12$. In particular, six is the least support size for a fractional
+gap, and the largest fractional gap through support size six is $2/3$.
+\end{theorem}
+
+\section{Reductions}
+\paragraph{Singleton deletion.}
+In a graph $G$, let $v$ and all its nonneighbors form an independent set
+$S$ of size $k$. Then
+\[
+\vartheta(G)=\max\{k,\vartheta(G-v)\}.
+\]
+The lower bound is monotonicity and independence. For the upper bound take
+$t\geq\max\{k,\vartheta(G-v)\}$. The standard theta dual gives a Gram matrix
+on $G-v$ with diagonal $t-1$ and off-diagonal entries $-1$ on nonedges.
+Write $w_u$ for its Gram vectors. Give $v$ the vector
+\[
+-\frac{1}{t-k+1}\sum_{u\in S\setminus\{v\}}w_u.
+\]
+Its inner product with each $w_u$ in the sum is $-1$. Its squared norm is
+$(k-1)/(t-k+1)\leq t-1$, so an orthogonal coordinate supplies the missing
+squared norm. This gives the required dual matrix on $G$. Each singleton
+in $G(\mathcal D)$ satisfies the hypothesis because its nonneighbors all
+contain its element. Apply the identity one singleton at a time. Thus
+Conjecture H holds for $\mathcal D$ exactly when the induced graph on its
+sets of size at least two has theta at most $s(\mathcal D)$.
+
+If the graph on the larger sets has a partition into at most $s$ cliques,
+pad the partition to $s$ slots. At most $s-1$ larger sets contain any one
+element, so its singleton fits in a slot containing no such set. Each pair
+of singletons is disjoint, so these choices can all be made independently.
+
+\paragraph{Complementary pairs.}
+Let $U$ be the support. If $U$ belongs to the downset, it is the full cube.
+Pair its proper nonempty sets with their complements and put $U$ alone in
+one clique. This gives $2^{|U|-1}$ cliques when $U$ is nonempty. Otherwise
+remove every complementary pair of sets present in $\mathcal D$. The
+remaining family is a downset. Indeed, if $A$ remains and $B\subseteq A$
+had been removed, then $U\setminus B$ was present and its subset
+$U\setminus A$ would have been present too. Each removed pair reduces every
+star by one, and its two sets form a clique. Thus a clique partition lifts
+by appending the removed pairs. A theta upper bound lifts by adding at most
+one per pair, by subadditivity over a vertex partition \cite{lovasz}.
+Repeat if the support decreases. Consequently it suffices to consider
+families with no complementary pair on their actual support.
+
+\section{Exhaustive check}
+On a fixed five-element set, the Python enumerator generates each antichain
+of nonempty facets once, giving $7\,579$ nontrivial downsets including all
+smaller supports. After the two reductions the graph has clique size at
+most two. A maximum matching gives a minimum clique partition. The program
+recurses on one vertex, trying a singleton or every available disjoint
+partner. Every resulting bound is at most the remaining star size.
+
+On six elements the C++ enumerator generates antichains of proper facets
+with full support. It excludes a pair of facets whose union is the whole
+support. This condition is equivalent to the absence of complementary
+pairs in their closure. It yields $1\,379\,272$ labeled downsets. In the
+graph of sets of size at least two, every nontrivial clique includes a
+two-set, because disjoint triples would be complementary. Cliques of size
+three consist of three pairs. A recursive cover search selects one pair
+and tries its singleton block, all disjoint partners, and all three-pair
+blocks containing it. A block of size $q$ saves $q-1$ slots. A branch can
+save at most the number of remaining pairs and at most two thirds of the
+number of remaining vertices. These bounds justify the two pruning tests.
+Exactly twelve labeled families fail the target cover. Replaying their
+orbit identifies them with the closure of
+\begin{equation}\label{eq:facets}
+123,\ 124,\ 135,\ 245,\ 345,\ 236,\ 146,\ 346,\ 156,\ 256.
+\end{equation}
+The family contains every pair and one triple from each complementary
+triple pair. An additional proper set on these six elements would have a
+complement already in the family. Removing complementary pairs in a
+strict superfamily therefore cannot leave this family intact. The
+full-cube case has already been covered. Thus all cases outside this
+orbit have an integral clique partition of the required size.
+
+\section{The exceptional family}
+The family in \eqref{eq:facets} has six singletons, fifteen pairs and ten
+triples. Each atom belongs to five pairs and five triples, so $s=11$.
+The link of each vertex is a five-cycle. The complex is a connected closed
+surface with Euler characteristic $6-15+10=1$, giving the real projective plane.
+On its $25$ nonsingletons write $A_{22}$ for the adjacency matrix of
+disjoint pair--pair incidences and $A_{23}$ for the adjacency matrix of
+disjoint pair--triple incidences, both embedded in the full matrix. The
+theta dual at $t=11$ is certified by
+\[
+M=11I-J+2A_{22}+4A_{23}.
+\]
+Its characteristic polynomial, computed in exact arithmetic, is
+\[
+(x-11)^5(x^2-24x+127)^4(x^2-18x+1)^5(x^2-9x+2).
+\]
+It has no nonpositive real roots. Since $M$ is real symmetric, it is
+positive definite. The accompanying checker also verifies positivity
+directly by fraction-free elimination. Singleton deletion gives the full
+theta upper bound of $11$, and a star attains it.
+
+For fractional independence, give singleton, pair and triple vertices
+weights $0,1/3,2/3$, respectively. A disjoint clique has at most three
+pairs, or at most one triple and one pair. Thus these weights are feasible
+and sum to $35/3$. For the matching upper certificate, assign weight
+$1/3$ to each partition into a facet, a pair in its complement, and the
+remaining singleton. Assign weight $1/9$ to each perfect matching of the
+six elements into pairs. Every facet is covered to weight one. Each pair
+is disjoint from two facets and belongs to three perfect matchings, so its
+coverage is also one. Each singleton has coverage $5/3$. The total
+covering weight is $30/3+15/9=35/3$. The repository verifies these weights
+and an explicit twelve-clique partition, which is minimum by the
+fractional lower bound. The full conjecture H remains open.
+
+\newpage
+\section{One-point extensions}
+Suppose $\mathcal D'$ has rank at most three and its restriction to six
+elements is \eqref{eq:facets}. The triples containing a seventh element
+define a graph $L$ on the original six elements, with an edge for each
+pair appearing in such a triple. The pairs containing the seventh element
+must include every endpoint of $L$. Pairs to isolated vertices of $L$
+are optional. When all six pairs are present, the code checks all
+$688$ orbits of $L$ under the automorphisms of the base family. A rational
+theta dual on the nonsingletons certifies each orbit.
+
+If $L$ is nonempty, the largest old star has size $12+\Delta(L)$ regardless
+of the optional pairs. The new star has size at most $7+|E(L)|$. If the
+new star in the all-pairs extension is no larger, deleting optional pairs
+leaves the star maximum unchanged, so the same theta bound follows by
+monotonicity. If an optional pair exists and $7+|E(L)|>12+\Delta(L)$, then
+$2|E(L)|\leq5\Delta(L)$ and $|E(L)|\geq6+\Delta(L)$ force $L$ to be $K_5$
+with one isolated vertex. The code checks the one missing-pair case with
+an additional rational dual. The base automorphism group is transitive on
+the six elements, so the choice of isolate makes no difference. For an
+empty $L$, retaining any optional pair keeps the star maximum at $12$.
+Retaining none adds at most a singleton, which is covered by singleton
+deletion. This proves the claimed rank-three extension result.
+
+\section{Replaying the verification}
+The supplementary repository includes the exhaustive enumerators, the
+twelve undecided labeled forms, and the 689 dual certificates used in
+Section 4. The replay commands in the README require only Python and a
+C++17 compiler. The exact matrix checker uses integer entries and
+fraction-free elimination. The optional numerical search proposes
+candidate matrices and uses the same exact checker before accepting them.
+
+\begin{thebibliography}{9}
+\bibitem{eff} D. Ellis, Y. Filmus, and E. Friedgut.
+Chv\'atal's conjecture: a proof from The Book. October 2026 revision.
+\href{https://arxiv.org/html/2609.28404v3\#S5}{arXiv:2609.28404v3, Section 5}.
+\bibitem{lovasz} L. Lov\'asz. On the Shannon capacity of a graph.
+\emph{IEEE Transactions on Information Theory} 25 (1979), 1--7.
+\href{https://doi.org/10.1109/TIT.1979.1055985}{doi:10.1109/TIT.1979.1055985}.
+\end{thebibliography}
+\end{document}
